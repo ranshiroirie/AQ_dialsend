@@ -4,6 +4,8 @@
 #define INTERVAL 500 //待機時間
 #define TERM 15 //ダイヤルの値がが同じ場合の待機期間
 #define WAITMODE 5 //待機モードまでのPOSTの再試行回数
+#define DEFMIN 0 //ダイヤルの初期最小値
+#define DEFMAX 681 //ダイヤルの初期最大値
 #define DIALMIN 1 //ダイヤルの最小値
 #define DIALMAX 6 //ダイヤルの最大値
 
@@ -28,7 +30,8 @@ int waitcounter = 0; //待機までのカウント
 int dials;
 
 void loop() {
-  dials = map(analogRead(DIALPIN), 0, 681, DIALMIN, DIALMAX); //ダイヤル（可変抵抗器）の値を指定した段階に変換
+//  Serial.println(analogRead(DIALPIN)); //始めにダイヤルの初期値の最小・最大値を調べて、ぞれぞれをDEFMIN、DEFMAXの値に入れる
+  dials = map(analogRead(DIALPIN), DEFMIN, DEFMAX, DIALMIN, DIALMAX); //ダイヤル（可変抵抗器）の値を指定した段階に変換
 
   if (dials != before_dials || timecounter > TERM) { //ダイヤルの値が同じ場合はすぐにPOSTをしないで、一定期間後に指定回数だけ再度POSTをする
 
