@@ -6,7 +6,7 @@
 #define USERNAME          "mio@iij"
 #define PASSWORD          "iij"
 
-#define BASEURL       "http://52.197.122.211/dices"
+#define BASEURL       "http://52.197.122.211/api/dices"
 
 #define INTERVAL          (500) //待機時間
 #define TERM 10 //ダイヤルの値がが同じ場合の待機期間
@@ -60,7 +60,7 @@ void loop() {
 //  SerialUSB.println(analogRead(DIALPIN)); //始めにダイヤルの初期値の最小・最大値を調べて、ぞれぞれをDEFMIN、DEFMAXの値に入れる
   dials = map(analogRead(DIALPIN), DEFMIN, DEFMAX, DIALMIN, DIALMAX); //ダイヤル（可変抵抗器）の値を指定した段階に変換
 
-  SerialUSB.println(millis() / 1000);
+//  SerialUSB.println(millis() / 1000);
 
   if (dials != before_dials || timecounter > TERM ) { //ダイヤルの値が同じ場合はすぐにPOSTをしないで、一定期間後に指定回数だけ再度POSTをする
 
