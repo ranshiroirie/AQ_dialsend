@@ -8,6 +8,7 @@
 #define DEFMAX 1023 //ダイヤルの初期最大値
 #define DIALMIN 1 //ダイヤルの最小値
 #define DIALMAX 6 //ダイヤルの最大値
+#define XBEE_SLEEP_PIN 2
 
 XBee xbee = XBee();
 
@@ -22,6 +23,8 @@ void setup() {
   Serial.begin(9600);
   xbee.setSerial(Serial);
   pinMode(DIALPIN, INPUT);
+  pinMode(XBEE_SLEEP_PIN, OUTPUT);
+  digitalWrite(XBEE_SLEEP_PIN, HIGH); //XBEEスリープ解除
 }
 
 int before_dials = 0; //一つ前のダイヤルの値
@@ -40,17 +43,27 @@ void loop() {
     if (dials == before_dials && timecounter == 0) { //ダイヤルをずっと回していないと、待機モードに入るまでのカウントダウンを行う
       Serial.print("残り試行回数: "); Serial.println(WAITMODE - waitcounter);
       if (WAITMODE - waitcounter == 0) {
+        digitalWrite(XBEE_SLEEP_PIN, LOW); //XBEEスリープ
         Serial.println("待機モードに入ります。再開するにはダイヤルをまわして下さい。");
       }
       waitcounter += 1;
-    } else if (dials != before_dials) { //ダイヤルを回した時に待機モードから脱ける
+    } else if (dials != before_dials) {
       waitcounter = 0;
     }
   }
+
   if (waitcounter > WAITMODE) { //待機モード
-    timecounter = 0;
-    Serial.println("待機中");
+    while (dials == before_dials) { //ダイヤルを回すまで待機モード
+      dials = map(analogRead(DIALPIN), DEFMIN, DEFMAX, DIALMIN, DIALMAX); //ダイヤル（可変抵抗器）の値を指定した段階に変換
+      Serial.println("待機中");
+      delay(INTERVAL);
+    }
+    waitcounter = 0;
+    Serial.println("送信を再開します。");
+    digitalWrite(XBEE_SLEEP_PIN, HIGH); //XBEEスリープ解除
+    delay(50);//起動待ち
   }
+
   before_dials = dials;
   timecounter += 1;
   delay(INTERVAL);
