@@ -1,6 +1,10 @@
 #include <XBee.h>
 
-#define DIALPIN A3
+
+#define ROTARY_PIN1 5
+#define ROTARY_PIN2 6
+#define ROTARY_PIN4 7
+#define ROTARY_PIN8 8
 #define INTERVAL 500 //待機時間
 #define TERM 15 //ダイヤルの値がが同じ場合の待機期間
 #define WAITMODE 5 //待機モードまでのPOSTの再試行回数
@@ -22,9 +26,13 @@ ZBTxRequest zbTx = ZBTxRequest(addr64, payload, sizeof(payload));
 void setup() {
   Serial.begin(9600);
   xbee.setSerial(Serial);
-  pinMode(DIALPIN, INPUT);
   pinMode(XBEE_SLEEP_PIN, OUTPUT);
   digitalWrite(XBEE_SLEEP_PIN, LOW); //XBEEスリープ解除
+  //ロータリーエンコーダのピン
+  pinMode(ROTARY_PIN1, INPUT);
+  pinMode(ROTARY_PIN2, INPUT);
+  pinMode(ROTARY_PIN4, INPUT);
+  pinMode(ROTARY_PIN8, INPUT);
 }
 
 int before_dials = 0; //一つ前のダイヤルの値
@@ -34,7 +42,7 @@ int dials;
 
 void loop() {
   //  Serial.println(analogRead(DIALPIN)); //始めにダイヤルの初期値の最小・最大値を調べて、ぞれぞれをDEFMIN、DEFMAXの値に入れる
-  dials = map(analogRead(DIALPIN), DEFMIN, DEFMAX, DIALMIN, DIALMAX); //ダイヤル（可変抵抗器）の値を指定した段階に変換
+  dials = digitalRead(ROTARY_PIN8) * 8 + digitalRead(ROTARY_PIN4) * 4 +  digitalRead(ROTARY_PIN2) * 2 +  digitalRead(ROTARY_PIN1); //ロータリーエンコーダの値
 
   if (dials != before_dials || timecounter > TERM) { //ダイヤルの値が同じ場合はすぐにPOSTをしないで、一定期間後に指定回数だけ再度POSTをする
 
@@ -54,7 +62,7 @@ void loop() {
 
   if (waitcounter > WAITMODE) { //待機モード
     while (dials == before_dials) { //ダイヤルを回すまで待機モード
-      dials = map(analogRead(DIALPIN), DEFMIN, DEFMAX, DIALMIN, DIALMAX); //ダイヤル（可変抵抗器）の値を指定した段階に変換
+      dials = digitalRead(ROTARY_PIN8) * 8 + digitalRead(ROTARY_PIN4) * 4 +  digitalRead(ROTARY_PIN2) * 2 +  digitalRead(ROTARY_PIN1); //ロータリーエンコーダの値
       Serial.println("待機中");
       delay(INTERVAL);
     }
