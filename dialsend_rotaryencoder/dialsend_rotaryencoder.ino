@@ -8,10 +8,6 @@
 #define INTERVAL 500 //待機時間
 #define TERM 15 //ダイヤルの値がが同じ場合の待機期間
 #define WAITMODE 5 //待機モードまでのPOSTの再試行回数
-#define DEFMIN 0 //ダイヤルの初期最小値
-#define DEFMAX 1023 //ダイヤルの初期最大値
-#define DIALMIN 1 //ダイヤルの最小値
-#define DIALMAX 6 //ダイヤルの最大値
 #define XBEE_SLEEP_PIN 2
 
 XBee xbee = XBee();
