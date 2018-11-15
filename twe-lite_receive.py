@@ -44,6 +44,16 @@ def DIAL_Convert():
 		DIAL = "3"
 	elif DIAL == "B":
 		DIAL = "4"
+	elif DIAL == "A":
+		DIAL = "5"
+	elif DIAL == "9":
+		DIAL = "6"
+	elif DIAL == "8":
+		DIAL = "7"
+	elif DIAL == "7":
+		DIAL = "8"
+	elif DIAL == "6":
+		DIAL = "9"
 	else:
 		DIAL = "E"
 
