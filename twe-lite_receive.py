@@ -5,10 +5,11 @@ import requests
 ser = serial.Serial('/dev/tty.usbserial-MW2MRTQL',115200)
 baseurl = "http://52.197.122.211/api/dices?"
 
-
 conv = ""
 ID = ""
 DIAL = ""
+
+counts = 0
 
 def receive():
 	rec = ser.readline()
@@ -17,10 +18,12 @@ def receive():
 	# print (conv)
 
 def Send_to_AWS():
-	global ID, DIAL
+	global ID, DIAL,counts
+	counts += 1
 	ID = conv[11:19]
 	DIAL = conv[34:35]
 	DIAL_Convert()
+	print ("カウント: %s" % counts)
 	print ("識別番号: %s" % ID)
 	print ("値: %s" % DIAL)
 	# print(len(conv))
@@ -60,6 +63,7 @@ def DIAL_Convert():
 def main():
 	receive()
 	Send_to_AWS()
+	print ("")
 
 if __name__ == '__main__':
 	while True:
