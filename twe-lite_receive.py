@@ -8,6 +8,7 @@ baseurl = "http://52.197.122.211/api/dices?"
 conv = ""
 ID = ""
 DIAL = ""
+VOL = ""
 
 counts = 0
 
@@ -26,6 +27,7 @@ def Send_to_AWS():
 	print ("カウント: %s" % counts)
 	print ("識別番号: %s" % ID)
 	print ("値: %s" % DIAL)
+	voltage()
 	# print(len(conv))
 	if len(conv) == 51:
 		if not DIAL == "E":
@@ -59,6 +61,13 @@ def DIAL_Convert():
 		DIAL = "9"
 	else:
 		DIAL = "E"
+
+def voltage():
+	global VOL
+	VOL = conv[28:31]
+	converted_vol = int(VOL, 16)
+	print ("駆動電圧: %dmV" % converted_vol)
+
 
 def main():
 	receive()
